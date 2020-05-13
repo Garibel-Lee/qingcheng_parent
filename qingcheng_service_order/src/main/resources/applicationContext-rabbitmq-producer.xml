@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+	<!--连接工厂-->
+	<rabbit:connection-factory id="connectionFactory" host="127.0.0.1" port="5672" username="guest" password="guest" publisher-confirms="true"/>
+
+	<rabbit:admin connection-factory="connectionFactory"></rabbit:admin>
+	<!--SKU 库存回滚队列 -->
+	<rabbit:queue name="queue.skuback" durable="true" exclusive="false" auto-delete="false" />
+	<!--创建直接交换器-->
+	<rabbit:direct-exchange name="exchange.skuback" durable="true" auto-delete="false">
+		<rabbit:bindings>
+			<rabbit:binding key="skuback"  queue="queue.skuback"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+
+	<!--购物车清除队列-->
+	<rabbit:queue name="queue.delete_cart" durable="true" exclusive="false" auto-delete="false" />
+	<!--创建直接交换器-->
+	<rabbit:direct-exchange name="exchange.delete_cart" durable="true" auto-delete="false">
+		<rabbit:bindings>
+			<rabbit:binding key="delete_cart"  queue="queue.delete_cart"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+
+	<rabbit:template id="rabbitTemplate" connection-factory="connectionFactory" />
+
+</beans>

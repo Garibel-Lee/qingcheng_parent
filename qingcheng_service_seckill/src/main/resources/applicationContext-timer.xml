@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/task
+http://www.springframework.org/schema/task/spring-task.xsd">
+    <!--开启注解驱动-->
+    <task:annotation-driven executor="taskExecutor" scheduler="seckillScheduler"/>
+    <task:executor id="seckillExecutor" pool-size="10"/>
+    <task:scheduler id="seckillScheduler" pool-size="10"/>
+
+    <!--配置线程池-->
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!--初始线程数量-->
+        <property name="corePoolSize" value="10" />
+        <!--最大线程数量-->
+        <property name="maxPoolSize" value="100" />
+        <!--最大队列数量-->
+        <property name="queueCapacity" value="200" />
+        <!--线程最大空闲时间-->
+        <property name="keepAliveSeconds" value="3000" />
+        <!--
+        拒绝策略,当线程池中的线程被占用完了，没有剩余线程了，如果此时有新的任务要执行，该采取的策略
+        -->
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor.CallerRunsPolicy" />
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,20 @@
+# Project exclude paths
+/.gradle/
+/qingcheng_common/target/
+/qingcheng_common_cas/target/
+/qingcheng_common_service/target/
+/qingcheng_common_web/target/
+/qingcheng_interface/target/
+/qingcheng_pojo/target/
+/qingcheng_service_business/target/
+/qingcheng_service_goods/target/
+/qingcheng_service_order/target/
+/qingcheng_service_pay/target/
+/qingcheng_service_seckill/target/
+/qingcheng_service_sms/target/
+/qingcheng_service_system/target/
+/qingcheng_service_user/target/
+/qingcheng_web_manager/target/
+/qingcheng_web_portal/target/
+/qingcheng_web_seckill/target/
+/qingcheng_web_user/target/

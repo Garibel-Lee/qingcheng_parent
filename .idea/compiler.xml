@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="qingcheng_service_seckill" />
+        <module name="qingcheng_service_sms" />
+        <module name="qingcheng_pojo" />
+        <module name="qingcheng_interface" />
+        <module name="qingcheng_common_web" />
+        <module name="qingcheng_common_service" />
+        <module name="qingcheng_service_user" />
+        <module name="qingcheng_web_portal" />
+        <module name="qingcheng_service_goods" />
+        <module name="qingcheng_web_seckill" />
+        <module name="qingcheng_service_business" />
+        <module name="qingcheng_common_cas" />
+        <module name="qingcheng_service_order" />
+        <module name="qingcheng_web_user" />
+        <module name="qingcheng_common" />
+        <module name="qingcheng_service_pay" />
+        <module name="qingcheng_service_system" />
+        <module name="qingcheng_web_manager" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="qingcheng_common" target="1.8" />
+      <module name="qingcheng_common_cas" target="1.8" />
+      <module name="qingcheng_common_service" target="6" />
+      <module name="qingcheng_common_web" target="1.8" />
+      <module name="qingcheng_interface" target="8" />
+      <module name="qingcheng_parent" target="1.8" />
+      <module name="qingcheng_pojo" target="1.8" />
+      <module name="qingcheng_service_business" target="1.8" />
+      <module name="qingcheng_service_goods" target="8" />
+      <module name="qingcheng_service_order" target="8" />
+      <module name="qingcheng_service_pay" target="8" />
+      <module name="qingcheng_service_seckill" target="1.8" />
+      <module name="qingcheng_service_sms" target="1.8" />
+      <module name="qingcheng_service_system" target="8" />
+      <module name="qingcheng_service_user" target="1.8" />
+      <module name="qingcheng_web_manager" target="8" />
+      <module name="qingcheng_web_portal" target="1.8" />
+      <module name="qingcheng_web_seckill" target="1.8" />
+      <module name="qingcheng_web_user" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

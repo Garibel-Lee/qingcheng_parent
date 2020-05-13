@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>相册列表</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/css/elementui.css">
+    <!-- 上传图片框样式，不使用上传组件可以删除此样式 -->
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 150px;
+            height: 70px;
+            line-height: 150px;
+            text-align: center;
+        }
+        .avatar {
+            width: 150px;
+            height: 70px;
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    相册名称：{{title}}  <el-button type="primary" onclick="location.href='album.html'">返回</el-button>
+    <el-upload
+            action="/upload/native.do"
+            list-type="picture-card"
+            :file-list="fileList"
+            :on-remove="handleRemove"
+            :on-success="handleSuccess">
+        <i class="el-icon-plus"></i>
+    </el-upload>
+</div>
+</body>
+<script src="/js/vue.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/elementui.js"></script>
+<script src="/js/util.js"></script>
+<script>
+     new Vue({
+        el: '#app',
+        data(){
+            return {
+                fileList: [ ],
+                id:0,
+                title:''
+            }
+        },
+        created(){
+            // 根据id查询相册列表
+            this.id=getQueryString("id");
+            axios.get(`/album/findById.do?id=${this.id}`).then(response => {
+                let images= response.data.imageItems;
+                if(images==null || images==""){
+                    images="[]";
+                }
+                this.title=response.data.title;
+                this.fileList = JSON.parse(images);
+            })
+        },
+        methods:{
+            handleRemove(file, fileList) {
+                this.fileList.splice( this.fileList.indexOf( { url:file.response } ) ,1 )//删除图片
+                this.save();
+            },
+            handleSuccess(response,file, fileList) {
+                this.fileList.push( {url:response} );//添加图片
+                this.save();
+            },
+            save(){
+                axios.post(`/album/update.do`,{id:this.id, imageItems: JSON.stringify(this.fileList) }).then(response => {
+                })
+            }
+        }
+    })
+</script>
+</html>

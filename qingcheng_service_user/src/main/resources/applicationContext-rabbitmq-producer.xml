@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+	<!--连接工厂-->
+	<rabbit:connection-factory id="connectionFactory" host="127.0.0.1" port="5672" username="guest" password="guest" publisher-confirms="true"/>
+
+	<rabbit:admin connection-factory="connectionFactory"></rabbit:admin>
+	<!--创建队列-->
+	<rabbit:queue name="queue.sms" durable="true" exclusive="false" auto-delete="false" />
+	<!--创建直接交换器-->
+	<rabbit:direct-exchange name="exchange.sms" durable="true" auto-delete="false">
+		<rabbit:bindings>
+			<rabbit:binding key="sms"  queue="queue.sms"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+
+	<rabbit:template id="rabbitTemplate" connection-factory="connectionFactory" />
+
+</beans>

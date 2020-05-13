@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品统计</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!--<link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">-->
+</head>
+<body>
+<div id="app">
+
+<el-date-picker
+        v-model="dateRange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @change="fetchData()">
+</el-date-picker>
+
+<el-table :data="tableData" border style="width: 100%">
+    <el-table-column prop="categoryName" label="一级分类" width="200"></el-table-column>
+    <el-table-column prop="num" label="数量" width="200"></el-table-column>
+    <el-table-column prop="money" label="销售额" width="200"></el-table-column>
+</el-table>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 800px;height:800px;"></div>
+</div>
+</body>
+<script src="/js/util.js"></script>
+<script src="/js/vue.js"></script>
+<script src="/js/axios.js"></script>
+<script src="/js/elementui.js"></script>
+<script src="/js/echarts.common.min.js"></script>
+<script>
+    // 基于准备好的dom，初始化echarts实例
+    new Vue({
+        el: '#app',
+        data(){
+            return {
+                tableData: [],
+                dateRange:[]
+            }
+        },
+        methods:{
+            fetchData (){
+                //查询统计分析数据
+                let date1=this.dateRange[0].Format("yyyy-MM-dd");
+                let date2=this.dateRange[1].Format("yyyy-MM-dd");
+                axios.get(`/categoryReport/category1Count.do?date1=${date1}&date2=${date2}`).then(response => {
+                    this.tableData = response.data;
+                    //图例数据
+                    let legendData= [];
+                    let numData=[];
+                    let moneyData=[];
+                    for(let i=0;i<this.tableData.length;i++){
+                        legendData.push(this.tableData[i].categoryName);
+                        numData.push( { name: this.tableData[i].categoryName ,value: this.tableData[i].num  } );
+                        moneyData.push( { name: this.tableData[i].categoryName ,value: this.tableData[i].money  } );
+                    }
+                    let myChart = echarts.init(document.getElementById('main'));
+                    //生成统计图
+                    // 指定图表的配置项和数据
+                    let option = {
+                        title : {
+                            text: '商品类目销售统计',
+                            subtext: '一级类目',
+                            x:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            type: 'scroll',
+                            orient: 'vertical',
+                            right: 10,
+                            top: 20,
+                            bottom: 20,
+                            data: legendData
+                        },
+                        series : [
+                            {
+                                name: '销售额',
+                                type: 'pie',
+                                radius : '35%',
+                                center: ['30%', '50%'],
+                                data: numData,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            },
+                            {
+                                name: '销售量',
+                                type: 'pie',
+                                radius : '35%',
+                                center : ['70%', '50%'],
+                                data: moneyData,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                    //myChart.on("click",function (params) {
+                    //    alert(params.name)
+                    //})
+                });
+            }
+        }
+    })
+
+</script>
+
+</html>

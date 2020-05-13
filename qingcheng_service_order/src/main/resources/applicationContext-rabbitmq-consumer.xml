@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+	<!--消费者监听类-->
+	<bean id="messageConsumer" class="com.qingcheng.consumer.CartMessageConsumer"></bean>
+	<!--设置监听容器-->
+	<rabbit:listener-container connection-factory="connectionFactory" acknowledge="auto" >
+		<rabbit:listener queue-names="queue.delete_cart" ref="messageConsumer"/>
+	</rabbit:listener-container>
+</beans>

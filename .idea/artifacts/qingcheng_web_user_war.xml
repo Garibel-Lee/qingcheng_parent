@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="qingcheng_web_user:war">
+    <output-path>$PROJECT_DIR$/qingcheng_web_user/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>qingcheng_web_user</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="qingcheng_web_user-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="qingcheng_web_user:war exploded" />
+    </root>
+  </artifact>
+</component>

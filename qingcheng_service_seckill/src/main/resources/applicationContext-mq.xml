@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/rabbit
+http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+    <!--配置connection-factory，指定连接rabbit server参数 -->
+    <rabbit:connection-factory id="connectionFactory" username="guest" password="guest" host="127.0.0.1" port="5672" publisher-confirms="true"/>
+    <rabbit:admin connection-factory="connectionFactory"></rabbit:admin>
+
+    <!--交换机(过期队列的交换机)-->
+    <rabbit:direct-exchange id="exchange.delay.order.begin" name="exchange.delay.order.begin" durable="false" auto-delete="false">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue.delay.order.begin" key="delay"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <!-- 延时队列(过期队列) -->
+    <rabbit:queue name="queue.delay.order.begin" durable="false">
+        <rabbit:queue-arguments>
+            <!-- 队列过期时间 -->
+            <entry key="x-message-ttl" value="10000" value-type="java.lang.Long"/>
+            <entry key="x-dead-letter-exchange" value="exchange.delay.order.done"/>
+            <entry key="x-dead-letter-routing-key" value="delay"/>
+        </rabbit:queue-arguments>
+    </rabbit:queue>
+
+    <!--交换机定义-->
+    <rabbit:direct-exchange id="exchange.delay.order.done" name="exchange.delay.order.done" durable="false" auto-delete="false">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue.delay.order.done" key="delay"/>
+            <!-- binding key 相同为 【delay】exchange转发消息到多个队列 -->
+            <!--<rabbit:binding queue="queue.delay.order.done.two" key="delay" />-->
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+    <rabbit:queue name="queue.delay.order.done" durable="false"/>
+    <rabbit:template id="rabbitTemplate" connection-factory="connectionFactory"/>
+
+    <!-- 消息接收者 -->
+    <rabbit:listener-container connection-factory="connectionFactory" channel-transacted="false">
+        <rabbit:listener queues="queue.delay.order.done" ref="orderMessageListener"/>
+    </rabbit:listener-container>
+
+    <!--创建一个消息监听对象-->
+    <bean class="com.qingcheng.consumer.OrderMessageListener" id="orderMessageListener"></bean>
+</beans>
